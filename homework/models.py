@@ -37,15 +37,14 @@ class Cart:
         self.products[product] = self.products.get(product, 0) + buy_count
 
     def remove_product(self, product: Product, remove_count=None):
-        if remove_count is None:
-            self.products[product] = 0
-        elif remove_count > self.products[product]:
-            self.products[product] = 0
-        else:
-            self.products[product] -= remove_count
+        if product in self.products:
+            if remove_count is None or remove_count > self.products[product]:
+                del self.products[product]
+            else:
+                self.products[product] -= remove_count
 
-    def clear(self, product: Product):
-        self.products[product] = 0
+    def clear(self):
+        self.products.clear()
 
     def get_total_price(self) -> float:
         total_price = 0
@@ -54,8 +53,8 @@ class Cart:
 
         return total_price
 
-    def buy(self, product: Product):
+    def buy(self):
         for product, buy_product in self.products.items():
             product.buy(buy_product)
 
-        self.clear(product)
+        self.clear()

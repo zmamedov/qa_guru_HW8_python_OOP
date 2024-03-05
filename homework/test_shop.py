@@ -1,5 +1,4 @@
 import pytest
-
 from homework.models import Product, Cart
 
 
@@ -46,11 +45,11 @@ class TestCart:
     def test_remove_product(self, cart, product):
         cart.add_product(product, buy_count=2)
         cart.remove_product(product)
-        assert cart.products[product] == 0
+        assert len(cart.products) == 0
 
         cart.add_product(product, buy_count=2)
         cart.remove_product(product, remove_count=4)
-        assert cart.products[product] == 0
+        assert len(cart.products) == 0
 
         cart.add_product(product, buy_count=5)
         cart.remove_product(product, remove_count=4)
@@ -58,8 +57,8 @@ class TestCart:
 
     def test_clear(self, cart, product):
         cart.add_product(product, buy_count=2)
-        cart.clear(product)
-        assert cart.products[product] == 0
+        cart.clear()
+        assert len(cart.products) == 0
 
     def test_get_total_price(self, cart, product, product_count=5):
         cart.add_product(product, product_count)
@@ -67,18 +66,18 @@ class TestCart:
 
     def test_buy_enough_in_shop(self, cart, product):
         cart.add_product(product, buy_count=0)
-        cart.buy(product)
+        cart.buy()
         assert product.quantity == 1000
 
         cart.add_product(product, buy_count=1)
-        cart.buy(product)
+        cart.buy()
         assert product.quantity == 999
 
         cart.add_product(product, buy_count=999)
-        cart.buy(product)
+        cart.buy()
         assert product.quantity == 0
 
     def test_buy_not_enough_in_shop(self, cart, product):
         cart.add_product(product, buy_count=1001)
         with pytest.raises(ValueError):
-            cart.buy(product)
+            cart.buy()
